@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8"><title>Setup | SRE PromptPay</title>
+<style>
+body{font-family:'Sarabun',sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#0f1117;color:#e8eaf0;padding:20px;}
+.box{max-width:400px;width:100%;text-align:center;}
+h2{font-size:20px;margin-bottom:8px;color:#f0b429;}
+p{font-size:14px;color:#6b7080;margin-bottom:24px;line-height:1.6;}
+button{padding:13px 32px;background:#f0b429;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;font-family:'Sarabun',sans-serif;}
+#msg{margin-top:16px;font-size:14px;min-height:20px;}
+.ok{color:#2dd4a0;}.err{color:#e55a2b;}
+</style>
+</head>
+<body>
+<div class="box">
+  <h2>🔧 ตั้งค่าเริ่มต้น</h2>
+  <p>เซ็ต PIN <strong>137946</strong> และเพิ่มบัญชีตั้งต้น<br><strong>กรุงไทย - สัมฤทธิ์การไฟฟ้า</strong><br>อัญชลี ยังเจริญ · 1516599014059294150</p>
+  <button onclick="setup()">ตั้งค่า</button>
+  <div id="msg"></div>
+</div>
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getDatabase, ref, set, push } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+const app=initializeApp({apiKey:"AIzaSyBLWpPcpu3hgQRCsPNbQnEIqOwbtnkjUQE",authDomain:"claude-8151c.firebaseapp.com",databaseURL:"https://claude-8151c-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"claude-8151c",storageBucket:"claude-8151c.firebasestorage.app",messagingSenderId:"613224139677",appId:"1:613224139677:web:d8e4b6cd547209e0133d74"});
+const db=getDatabase(app);
+window.setup=async()=>{
+  const msg=document.getElementById('msg');
+  try{
+    await set(ref(db,'promptpay/config/pin'),'137946');
+    await push(ref(db,'promptpay/accounts'),{name:'กรุงไทย - สัมฤทธิ์การไฟฟ้า',type:'merchant',id:'1516599014059294150',owner:'อัญชลี ยังเจริญ'});
+    msg.className='ok'; msg.textContent='✓ ตั้งค่าสำเร็จ! ปิดหน้านี้ได้เลย';
+  }catch(e){ msg.className='err'; msg.textContent='Error: '+e.message; }
+};
+</script>
+</body>
+</html>
